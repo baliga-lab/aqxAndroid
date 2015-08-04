@@ -1,6 +1,9 @@
 package org.systemsbiology.baliga.aqx1010;
 
 import java.util.Random;
+
+import android.app.NotificationManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import android.appwidget.AppWidgetProvider;
@@ -13,24 +16,28 @@ import android.widget.RemoteViews;
 
 
 /**
- * Created by weiju on 8/3/15.
+ * This is the widget provider class.
  */
 public class AqxWidgetProvider extends AppWidgetProvider {
 
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // Get all ids
-        ComponentName thisWidget = new ComponentName(context,
-                AqxWidgetProvider.class);
+        ComponentName thisWidget = new ComponentName(context, AqxWidgetProvider.class);
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+                .setSmallIcon(R.mipmap.leaf_icon)
+                .setContentTitle("My notification")
+                .setContentText("some text");
         int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
         for (int widgetId : allWidgetIds) {
-            // create some random data
-            int number = (new Random().nextInt(100));
 
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
                     R.layout.aqx_widget);
-            Log.w("WidgetExample", String.valueOf(number));
             // Set the text
-            remoteViews.setTextViewText(R.id.update, String.valueOf(number));
+            remoteViews.setTextViewText(R.id.temperature, "23.2\u00B0");
+            remoteViews.setTextViewText(R.id.o2, "2.3");
+            remoteViews.setTextViewText(R.id.ammonium, "3.2");
+            remoteViews.setTextViewText(R.id.nitrate, "42.3");
+            remoteViews.setTextViewText(R.id.ph, "6.3");
 
             // Register an onClickListener
             Intent intent = new Intent(context, AqxWidgetProvider.class);
@@ -40,8 +47,14 @@ public class AqxWidgetProvider extends AppWidgetProvider {
 
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                     0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            remoteViews.setOnClickPendingIntent(R.id.update, pendingIntent);
+            remoteViews.setOnClickPendingIntent(R.id.temperature, pendingIntent);
+            remoteViews.setOnClickPendingIntent(R.id.o2, pendingIntent);
             appWidgetManager.updateAppWidget(widgetId, remoteViews);
+
+            // set notification
+            NotificationManager mNotifyMgr =
+                    (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotifyMgr.notify(1, mBuilder.build());
         }
     }
 }

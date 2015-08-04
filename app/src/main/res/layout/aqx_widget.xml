@@ -3,18 +3,134 @@
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="8dip"
-    android:background="@drawable/myshape" >
+    android:layout_margin="2dip"
+    android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/update"
-        style="@android:style/TextAppearance.Medium"
-        android:layout_width="match_parent"
+    <!-- Temperature -->
+    <LinearLayout
+        android:layout_width="58dp"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:gravity="center_horizontal|center_vertical"
-        android:layout_margin="4dip"
-        android:text="Static Text" >
-    </TextView>
+        android:background="@drawable/greengrad"
+        android:orientation="vertical">
+        <TextView
+            style="@android:style/TextAppearance.Small"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal|top"
+            android:text="Temp" >
+        </TextView>
+        <TextView
+            android:id="@+id/temperature"
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:text="Static Text" >
+        </TextView>
+    </LinearLayout>
 
+    <!-- O2 -->
+    <LinearLayout
+        android:layout_width="58dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/redgrad"
+        android:orientation="vertical">
+        <TextView
+            style="@android:style/TextAppearance.Small"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal|top"
+            android:text="O2" >
+        </TextView>
+        <TextView
+            android:id="@+id/o2"
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal|top"
+            android:text="O2" >
+        </TextView>
+    </LinearLayout>
+
+    <!-- Nitrate -->
+    <LinearLayout
+        android:layout_width="58dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/greengrad"
+        android:orientation="vertical">
+        <TextView
+            style="@android:style/TextAppearance.Small"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal|top"
+            android:text="NO3-" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/nitrate"
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:text="Static Text" >
+        </TextView>
+    </LinearLayout>
+
+    <!-- Ammonium -->
+    <LinearLayout
+        android:layout_width="58dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/yellowgrad"
+        android:orientation="vertical">
+
+        <TextView
+            style="@android:style/TextAppearance.Small"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal|top"
+            android:text="NH4+">
+        </TextView>
+        <TextView
+            android:id="@+id/ammonium"
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:text="Static Text" >
+        </TextView>
+    </LinearLayout>
+
+    <!-- pH -->
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/greengrad"
+        android:orientation="vertical">
+
+        <TextView
+            style="@android:style/TextAppearance.Small"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal|top"
+            android:text="pH" >
+        </TextView>
+        <TextView
+            android:id="@+id/ph"
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:text="Static Text" >
+        </TextView>
+    </LinearLayout>
 </LinearLayout>
