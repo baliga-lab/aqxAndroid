@@ -20,21 +20,20 @@ import android.widget.RemoteViews;
  */
 public class AqxWidgetProvider extends AppWidgetProvider {
 
+    private static int counter = 0;
+    private float o2vals[] = {10.2f, 8.8f, 3.3f};
+
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // Get all ids
         ComponentName thisWidget = new ComponentName(context, AqxWidgetProvider.class);
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.mipmap.leaf_icon)
-                .setContentTitle("My notification")
-                .setContentText("some text");
-        int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-        for (int widgetId : allWidgetIds) {
+        for (int widgetId : appWidgetIds) {
 
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
                     R.layout.aqx_widget);
             // Set the text
             remoteViews.setTextViewText(R.id.temperature, "23.2\u00B0");
-            remoteViews.setTextViewText(R.id.o2, "2.3");
+            float o2val = o2vals[counter % 3];
+            remoteViews.setTextViewText(R.id.o2, String.format("%.2f", o2val));
             remoteViews.setTextViewText(R.id.ammonium, "3.2");
             remoteViews.setTextViewText(R.id.nitrate, "42.3");
             remoteViews.setTextViewText(R.id.ph, "6.3");
@@ -52,9 +51,18 @@ public class AqxWidgetProvider extends AppWidgetProvider {
             appWidgetManager.updateAppWidget(widgetId, remoteViews);
 
             // set notification
-            NotificationManager mNotifyMgr =
-                    (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotifyMgr.notify(1, mBuilder.build());
+            counter++;
+            Log.d("aqx", "widget");
+            if (o2val <= 3.5) {
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+                        .setSmallIcon(R.mipmap.leaf_icon)
+                        .setContentTitle("AQX Alert")
+                        .setContentText("Something is wrong with your Aquaponics system. Please check.");
+
+                NotificationManager mNotifyMgr =
+                        (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                mNotifyMgr.notify(1, mBuilder.build());
+            }
         }
     }
 }
