@@ -5,4 +5,7 @@
     <string name="temp_label">Temp</string>
     <string name="do_label">O<sub>2</sub></string>
     <string name="ph_label">pH</string>
+    <string name="title_system_list">Systems</string>
+    <string name="title_system_detail">System Detail</string>
+    <string name="title_measure_light">Measure Light</string>
 </resources>
