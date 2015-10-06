@@ -1,5 +1,7 @@
 package org.systemsbiology.baliga.aqx1010;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import android.app.NotificationManager;
@@ -13,6 +15,9 @@ import android.content.Intent;
 import android.content.ComponentName;
 import android.app.PendingIntent;
 import android.widget.RemoteViews;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 
 /**
@@ -54,6 +59,17 @@ public class AqxWidgetProvider extends AppWidgetProvider {
             counter++;
             Log.d("aqx", "widget");
             if (o2val <= 3.5) {
+                final Intent pIntent = new Intent("com.getpebble.action.SEND_NOTIFICATION");
+                final Map<String, String> data = new HashMap<String, String>();
+                data.put("title", "AQX Alert");
+                data.put("body", "Something is wrong with your Aquaponics system. Please check.");
+                final JSONObject jsonData = new JSONObject(data);
+                final String notificationData = new JSONArray().put(jsonData).toString();
+                pIntent.putExtra("messageType", "PEBBLE_ALERT");
+                pIntent.putExtra("sender", "AqxWidget");
+                pIntent.putExtra("notificationData", notificationData);
+                context.sendBroadcast(pIntent);
+
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                         .setSmallIcon(R.mipmap.leaf_icon)
                         .setContentTitle("AQX Alert")

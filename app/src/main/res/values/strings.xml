@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">aqx1010</string>
+    <string name="ammonium_label">NH<sub>4</sub><sup>+</sup></string>
+    <string name="nitrate_label">NO<sub>3</sub><sup>-</sup></string>
+    <string name="temp_label">Temp</string>
+    <string name="do_label">O<sub>2</sub></string>
+    <string name="ph_label">pH</string>
 </resources>

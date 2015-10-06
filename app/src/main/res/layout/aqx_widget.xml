@@ -19,7 +19,7 @@
 
         <!-- Temperature -->
         <LinearLayout
-            android:layout_width="50dp"
+            android:layout_width="60dp"
             android:layout_height="match_parent"
             android:background="@drawable/greengrad"
             android:orientation="vertical">
@@ -29,7 +29,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal|top"
-                android:text="Temp" >
+                android:text="@string/temp_label" >
             </TextView>
             <TextView
                 android:id="@+id/temperature"
@@ -44,7 +44,7 @@
 
         <!-- O2 -->
         <LinearLayout
-            android:layout_width="50dp"
+            android:layout_width="60dp"
             android:layout_height="match_parent"
             android:background="@drawable/redgrad"
             android:orientation="vertical">
@@ -63,13 +63,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal|top"
-                android:text="O2" >
+                android:text="@string/do_label" >
             </TextView>
         </LinearLayout>
 
         <!-- Nitrate -->
         <LinearLayout
-            android:layout_width="50dp"
+            android:layout_width="60dp"
             android:layout_height="match_parent"
             android:background="@drawable/greengrad"
             android:orientation="vertical">
@@ -79,7 +79,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal|top"
-                android:text="NO3-" >
+                android:text="@string/nitrate_label" >
             </TextView>
 
             <TextView
@@ -95,7 +95,7 @@
 
         <!-- Ammonium -->
         <LinearLayout
-            android:layout_width="50dp"
+            android:layout_width="60dp"
             android:layout_height="match_parent"
             android:background="@drawable/yellowgrad"
             android:orientation="vertical">
@@ -106,7 +106,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal|top"
-                android:text="NH4+">
+                android:text="@string/ammonium_label">
             </TextView>
             <TextView
                 android:id="@+id/ammonium"
@@ -132,7 +132,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal|top"
-                android:text="pH" >
+                android:text="@string/ph_label" >
             </TextView>
             <TextView
                 android:id="@+id/ph"
