@@ -20,31 +20,12 @@
         </receiver>
 
         <activity
-            android:name=".SystemListActivity"
-            android:label="@string/title_system_list"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:name=".MeasureLightActivity"
+            android:label="@string/title_measure_light">
             <intent-filter android:label="@string/app_name" >
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".SystemDetailActivity"
-            android:label="@string/title_system_detail"
-            android:parentActivityName=".SystemListActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.systemsbiology.baliga.aqx1010.SystemListActivity" />
-        </activity>
-        <activity
-            android:name=".MeasureLightActivity"
-            android:label="@string/title_measure_light">
-            <!--
-            <intent-filter android:label="@string/app_name" >
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter> -->
         </activity>
     </application>
 
