@@ -8,4 +8,10 @@
     <string name="title_system_list">Systems</string>
     <string name="title_system_detail">System Detail</string>
     <string name="title_measure_light">Measure Light</string>
+    <string name="title_activity_main">Your Systems</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>
