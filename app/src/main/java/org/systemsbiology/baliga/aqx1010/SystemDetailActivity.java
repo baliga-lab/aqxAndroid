@@ -1,7 +1,7 @@
 package org.systemsbiology.baliga.aqx1010;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -92,6 +93,9 @@ public class SystemDetailActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
+            if (position == 1) {
+                return new MeasurementTypesFragment();
+            }
             return PlaceholderFragment.newInstance(position + 1);
         }
 
@@ -109,6 +113,35 @@ public class SystemDetailActivity extends AppCompatActivity {
                     return "MEASUREMENTS";
             }
             return null;
+        }
+    }
+
+    public static class MeasurementTypesFragment extends Fragment {
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_measurement_types, container, false);
+
+            TextView selectLightView = (TextView) rootView.findViewById(R.id.selectLightView);
+            selectLightView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent measureLightIntent = new Intent(MeasurementTypesFragment.this.getContext(),
+                            MeasureLightActivity.class);
+                    startActivity(measureLightIntent);
+                }
+            });
+            TextView selectPHView = (TextView) rootView.findViewById(R.id.selectPHView);
+            selectPHView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent measurePHIntent = new Intent(MeasurementTypesFragment.this.getContext(),
+                            MeasureChemistryActivity.class);
+                    startActivity(measurePHIntent);
+                }
+            });
+            return rootView;
         }
     }
 
