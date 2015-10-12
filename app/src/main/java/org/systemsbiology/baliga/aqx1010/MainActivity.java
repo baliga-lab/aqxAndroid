@@ -1,12 +1,9 @@
 package org.systemsbiology.baliga.aqx1010;
 
-import android.app.LoaderManager;
-import android.content.Loader;
-import android.database.Cursor;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -57,6 +54,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("aqx1010", "clicked");
+                Intent detailIntent = new Intent(MainActivity.this, SystemDetailActivity.class);
+                startActivity(detailIntent);
             }
         });
     }
