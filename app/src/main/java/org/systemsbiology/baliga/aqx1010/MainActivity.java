@@ -1,12 +1,10 @@
 package org.systemsbiology.baliga.aqx1010;
 
 import android.accounts.AccountManager;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -25,72 +23,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.GoogleAuthException;
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
-
-import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public class GetUsernameTask extends AsyncTask<Void, Integer, Void> {
-        Activity mActivity;
-        String mScope;
-        String mEmail;
-
-        GetUsernameTask(Activity activity, String name, String scope) {
-            this.mActivity = activity;
-            this.mScope = scope;
-            this.mEmail = name;
-        }
-
-        /**
-         * Executes the asynchronous job. This runs when you call execute()
-         * on the AsyncTask instance.
-         */
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                String token = fetchToken();
-                if (token != null) {
-                    // **Insert the good stuff here.**
-                    // Use the token to access the user's Google data.
-                    Log.d("aqx1010", "Token: " + token);
-                }
-            } catch (IOException e) {
-                // The fetchToken() method handles Google-specific exceptions,
-                // so this indicates something went wrong at a higher level.
-                // TIP: Check for network connectivity before starting the AsyncTask.
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        /**
-         * Gets an authentication token from Google and handles any
-         * GoogleAuthException that may occur.
-         */
-        protected String fetchToken() throws IOException {
-            try {
-                return GoogleAuthUtil.getToken(mActivity, mEmail, mScope);
-            } catch (UserRecoverableAuthException userRecoverableException) {
-                // GooglePlayServices.apk is either old, disabled, or not present
-                // so we need to show the user some UI in the activity to recover.
-                // TODO: complain about old version
-
-            } catch (GoogleAuthException fatalException) {
-                // Some other type of unrecoverable exception has occurred.
-                // Report and log the error as appropriate for your app.
-                fatalException.printStackTrace();
-            }
-            return null;
-        }
-    }
-
-    /* Google client id */
-    private static final String CLIENT_ID = "75692667349-b1pb7e4fh5slptq3allb93dvbtbfpjda.apps.googleusercontent.com";
+    /* Google client id, currently we do not use it */
+    //private static final String CLIENT_ID = "75692667349-b1pb7e4fh5slptq3allb93dvbtbfpjda.apps.googleusercontent.com";
     private static final String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
     static final int REQUEST_CODE_PICK_ACCOUNT = 1000;
 
@@ -111,7 +50,7 @@ public class MainActivity extends AppCompatActivity
         else {
             if (isDeviceOnline()) {
                 Log.d("aqx1010", "starting get username task");
-                new GetUsernameTask(MainActivity.this, email, SCOPE).execute();
+                new GoogleTokenTask(MainActivity.this, email, SCOPE).execute();
             } else {
                 Log.d("aqx1010", "not online");
                 Toast.makeText(this, R.string.not_online, Toast.LENGTH_LONG).show();
@@ -124,6 +63,7 @@ public class MainActivity extends AppCompatActivity
         if (requestCode == REQUEST_CODE_PICK_ACCOUNT) {
             if (resultCode == RESULT_OK) {
                 String email = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+                // TODO: we might be able to store the email
                 Log.d("aqx1010", "picked user mail: " + email);
                 getUsername(email);
             } else {
