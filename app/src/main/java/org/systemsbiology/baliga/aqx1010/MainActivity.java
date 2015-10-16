@@ -42,6 +42,20 @@ public class MainActivity extends AppCompatActivity
     static final int REQUEST_CODE_PICK_ACCOUNT = 1000;
     private String email;
 
+    private void getSystems() {
+        if (email == null) pickUserAccount();
+        else {
+            if (isDeviceOnline()) {
+                Log.d("aqx1010", "starting get username task");
+                GetSystemListTask task = new GetSystemListTask(MainActivity.this, email, SCOPE);
+                task.execute();
+            } else {
+                Log.d("aqx1010", "not online");
+                Toast.makeText(this, R.string.not_online, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
     private void pickUserAccount() {
         BufferedReader in = null;
         try {
@@ -50,6 +64,7 @@ public class MainActivity extends AppCompatActivity
             in = new BufferedReader(new InputStreamReader(fis));
             this.email = in.readLine();
             Log.d("aqx1010", "Found email: " + email);
+            this.getSystems();
         } catch (IOException ex) {
             Log.d("aqx1010", "email not found, getting from account picker");
             String[] accountTypes = new String[] {"com.google"};
@@ -66,19 +81,6 @@ public class MainActivity extends AppCompatActivity
         return networkInfo != null && networkInfo.isConnected();
     }
 
-    private void getUsername(String email) {
-        if (email == null) pickUserAccount();
-        else {
-            if (isDeviceOnline()) {
-                Log.d("aqx1010", "starting get username task");
-                new GoogleTokenTask(MainActivity.this, email, SCOPE).execute();
-            } else {
-                Log.d("aqx1010", "not online");
-                Toast.makeText(this, R.string.not_online, Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_PICK_ACCOUNT) {
@@ -89,6 +91,7 @@ public class MainActivity extends AppCompatActivity
                     fos = openFileOutput("email", Context.MODE_PRIVATE);
                     fos.write(this.email.getBytes());
                     Log.d("aqx1010", "email written to file");
+                    this.getSystems();
                 } catch (FileNotFoundException ex) {
                     Log.e("aqx1010", "not found", ex);
                 } catch (IOException ex) {
@@ -96,11 +99,6 @@ public class MainActivity extends AppCompatActivity
                 } finally {
                     if (fos != null) try { fos.close(); } catch (IOException ex) {}
                 }
-
-                // TODO: we might be able to store the email
-                Log.d("aqx1010", "picked user mail: " + this.email);
-                getUsername(this.email);
-
             } else {
                 Toast.makeText(this, R.string.pick_account, Toast.LENGTH_SHORT).show();
 
