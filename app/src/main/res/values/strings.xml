@@ -16,4 +16,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_system_detail">System Details</string>
     <string name="section_format">Hello World from section: %1$d</string>
+
+    <string name="not_online">Your device is not online</string>
+    <string name="pick_account">Please pick an account to proceed</string>
 </resources>

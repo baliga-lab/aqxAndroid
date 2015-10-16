@@ -17,6 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class SystemDetailActivity extends AppCompatActivity {
@@ -122,23 +125,23 @@ public class SystemDetailActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_measurement_types, container, false);
-
-            TextView selectLightView = (TextView) rootView.findViewById(R.id.selectLightView);
-            selectLightView.setOnClickListener(new View.OnClickListener() {
+            ListView listView = (ListView) rootView.findViewById(R.id.measurementTypeListView);
+            ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(this.getContext(),
+                    R.layout.meastype_list_item, R.id.measTypeTextView,
+                    new String[] {"Light", "pH", "Dissolved Oxygen", "Ammonium", "Nitrate", "Temperature"});
+            listView.setAdapter(listAdapter);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onClick(View v) {
-                    Intent measureLightIntent = new Intent(MeasurementTypesFragment.this.getContext(),
-                            MeasureLightActivity.class);
-                    startActivity(measureLightIntent);
-                }
-            });
-            TextView selectPHView = (TextView) rootView.findViewById(R.id.selectPHView);
-            selectPHView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent measurePHIntent = new Intent(MeasurementTypesFragment.this.getContext(),
-                            MeasureChemistryActivity.class);
-                    startActivity(measurePHIntent);
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Log.d("aqx1010", "clicked");
+                    switch (position) {
+                        case 0:
+                            startActivity(new Intent(getContext(), MeasureLightActivity.class));
+                            break;
+                        default:
+                            startActivity(new Intent(getContext(), MeasureChemistryActivity.class));
+                            break;
+                    }
                 }
             });
             return rootView;

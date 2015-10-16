@@ -10,5 +10,5 @@
         android:layout_height="wrap_content"
         android:minHeight="20dp"
         android:text="New Text"
-        android:id="@+id/systemNameTextView" />
+        android:id="@+id/measTypeTextView" />
 </LinearLayout>

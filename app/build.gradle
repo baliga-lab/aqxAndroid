@@ -1,9 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+    }
     compileSdkVersion 23
     buildToolsVersion '23.0.1'
-
     defaultConfig {
         applicationId "org.systemsbiology.baliga.aqx1010"
         minSdkVersion 15
@@ -16,6 +17,8 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+        }
     }
 }
 
@@ -25,4 +28,5 @@ dependencies {
     compile 'com.android.support:support-v13:23.0.1'
     compile 'com.android.support:support-v4:23.0.1'
     compile 'com.android.support:design:23.0.1'
+    compile 'com.google.android.gms:play-services:7.8.0'
 }
