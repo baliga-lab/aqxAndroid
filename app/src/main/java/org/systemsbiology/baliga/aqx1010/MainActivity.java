@@ -25,6 +25,14 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.AccountPicker;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -32,11 +40,24 @@ public class MainActivity extends AppCompatActivity
     //private static final String CLIENT_ID = "75692667349-b1pb7e4fh5slptq3allb93dvbtbfpjda.apps.googleusercontent.com";
     private static final String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
     static final int REQUEST_CODE_PICK_ACCOUNT = 1000;
+    private String email;
 
     private void pickUserAccount() {
-        String[] accountTypes = new String[] {"com.google"};
-        Intent intent = AccountPicker.newChooseAccountIntent(null, null, accountTypes, false, null, null, null, null);
-        startActivityForResult(intent, REQUEST_CODE_PICK_ACCOUNT);
+        BufferedReader in = null;
+        try {
+            //this.deleteFile();
+            FileInputStream fis = openFileInput("email");
+            in = new BufferedReader(new InputStreamReader(fis));
+            this.email = in.readLine();
+            Log.d("aqx1010", "Found email: " + email);
+        } catch (IOException ex) {
+            Log.d("aqx1010", "email not found, getting from account picker");
+            String[] accountTypes = new String[] {"com.google"};
+            Intent intent = AccountPicker.newChooseAccountIntent(null, null, accountTypes, false, null, null, null, null);
+            startActivityForResult(intent, REQUEST_CODE_PICK_ACCOUNT);
+        } finally {
+            if (in != null) try { in.close(); } catch (IOException ex) {}
+        }
     }
 
     private boolean isDeviceOnline() {
@@ -62,10 +83,24 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_PICK_ACCOUNT) {
             if (resultCode == RESULT_OK) {
-                String email = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+                this.email = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+                FileOutputStream fos = null;
+                try {
+                    fos = openFileOutput("email", Context.MODE_PRIVATE);
+                    fos.write(this.email.getBytes());
+                    Log.d("aqx1010", "email written to file");
+                } catch (FileNotFoundException ex) {
+                    Log.e("aqx1010", "not found", ex);
+                } catch (IOException ex) {
+                    Log.e("aqx1010", "not found", ex);
+                } finally {
+                    if (fos != null) try { fos.close(); } catch (IOException ex) {}
+                }
+
                 // TODO: we might be able to store the email
-                Log.d("aqx1010", "picked user mail: " + email);
-                getUsername(email);
+                Log.d("aqx1010", "picked user mail: " + this.email);
+                getUsername(this.email);
+
             } else {
                 Toast.makeText(this, R.string.pick_account, Toast.LENGTH_SHORT).show();
 
