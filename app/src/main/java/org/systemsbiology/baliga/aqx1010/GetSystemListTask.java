@@ -17,8 +17,11 @@ import java.util.List;
 
 public class GetSystemListTask extends GoogleTokenTask<Void, Integer, List<AqxSystem>> {
 
-    public GetSystemListTask(Activity activity, String email, String scope) {
+    private GetSystemListTaskListener listener;
+    public GetSystemListTask(Activity activity, String email, String scope,
+                             GetSystemListTaskListener listener) {
         super(activity, email, scope);
+        this.listener = listener;
     }
     /**
      * Executes the asynchronous job. This runs when you call execute()
@@ -29,7 +32,8 @@ public class GetSystemListTask extends GoogleTokenTask<Void, Integer, List<AqxSy
         List<AqxSystem> result = new ArrayList<>();
         BufferedReader in = null;
         try {
-            URL url = new URL("http://eric.systemsbiology.net:5000/api/v1/systems");
+            //URL url = new URL("http://eric.systemsbiology.net:5000/api/v1/systems");
+            URL url = new URL("http://192.168.1.4:5000/api/v1/systems");
             HttpURLConnection conn = getConnection(url);
             in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             StringBuilder buffer = new StringBuilder();
@@ -59,4 +63,8 @@ public class GetSystemListTask extends GoogleTokenTask<Void, Integer, List<AqxSy
         return result;
     }
 
+    @Override
+    protected void onPostExecute(List<AqxSystem> result) {
+        if (listener != null) listener.systemListRetrieved(result);
+    }
 }

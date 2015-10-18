@@ -3,6 +3,7 @@ package org.systemsbiology.baliga.aqx1010;
 import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -18,8 +19,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -32,9 +35,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, GetSystemListTaskListener {
 
     /* Google client id, currently we do not use it */
     //private static final String CLIENT_ID = "75692667349-b1pb7e4fh5slptq3allb93dvbtbfpjda.apps.googleusercontent.com";
@@ -46,8 +50,8 @@ public class MainActivity extends AppCompatActivity
         if (email == null) pickUserAccount();
         else {
             if (isDeviceOnline()) {
-                Log.d("aqx1010", "starting get username task");
-                GetSystemListTask task = new GetSystemListTask(MainActivity.this, email, SCOPE);
+                Log.d("aqx1010", "starting get system list task");
+                GetSystemListTask task = new GetSystemListTask(MainActivity.this, email, SCOPE, this);
                 task.execute();
             } else {
                 Log.d("aqx1010", "not online");
@@ -132,18 +136,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ListView listView = (ListView) findViewById(R.id.systemListView);
-        ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(this, R.layout.system_list_item,
-                R.id.systemNameTextView, new String[]{"System 1", "System 2"});
-        listView.setAdapter(listAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("aqx1010", "clicked");
-                Intent detailIntent = new Intent(MainActivity.this, SystemDetailActivity.class);
-                startActivity(detailIntent);
-            }
-        });
         pickUserAccount();
     }
 
@@ -198,5 +190,25 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void systemListRetrieved(List<AqxSystem> systems) {
+        ListView listView = (ListView) findViewById(R.id.systemListView);
+        String[] systemNames = new String[systems.size()];
+        for (int i = 0; i < systems.size(); i++) {
+            systemNames[i] = systems.get(i).name;
+        }
+        ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(this, R.layout.system_list_item,
+                R.id.systemNameTextView, systemNames);
+        listView.setAdapter(listAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("aqx1010", "clicked");
+                Intent detailIntent = new Intent(MainActivity.this, SystemDetailActivity.class);
+                startActivity(detailIntent);
+            }
+        });
+
     }
 }
