@@ -21,8 +21,17 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class SystemDetailActivity extends AppCompatActivity {
+import org.systemsbiology.baliga.aqx1010.apiclient.AqxSystemDetails;
+import org.systemsbiology.baliga.aqx1010.apiclient.GetSystemDetailsTask;
+import org.systemsbiology.baliga.aqx1010.apiclient.GetSystemDetailsTaskListener;
+import org.systemsbiology.baliga.aqx1010.apiclient.GoogleTokenTask;
+
+import java.io.IOException;
+
+public class SystemDetailActivity extends AppCompatActivity
+implements GetSystemDetailsTaskListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -38,10 +47,15 @@ public class SystemDetailActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private String systemUID;
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = this.getIntent();
+        this.systemUID = intent.getStringExtra("system_uid");
+
         setContentView(R.layout.activity_system_detail);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -56,8 +70,19 @@ public class SystemDetailActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-    }
 
+        try {
+            this.email = GoogleTokenTask.storedEmail(this);
+            if (GoogleTokenTask.isDeviceOnline(this)) {
+                new GetSystemDetailsTask(this, email, this.systemUID, this).execute();
+            } else {
+                Toast.makeText(this, R.string.not_online, Toast.LENGTH_LONG).show();
+            }
+
+        } catch (IOException ex) {
+            Log.e("aqx1010", "cound not retrieve mail", ex);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -81,6 +106,11 @@ public class SystemDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void detailsRetrieved(AqxSystemDetails details) {
+        Log.d("aqx1010", String.format("System name: %s, created on: %s",
+                details.name, details.creationDate.toString()));
+    }
+
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -99,7 +129,7 @@ public class SystemDetailActivity extends AppCompatActivity {
             if (position == 1) {
                 return new MeasurementTypesFragment();
             }
-            return PlaceholderFragment.newInstance(position + 1);
+            return PlaceholderFragment.newInstance(systemUID);
         }
 
         @Override
@@ -126,7 +156,7 @@ public class SystemDetailActivity extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_measurement_types, container, false);
             ListView listView = (ListView) rootView.findViewById(R.id.measurementTypeListView);
-            ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(this.getContext(),
+            ArrayAdapter<String> listAdapter = new ArrayAdapter<>(this.getContext(),
                     R.layout.meastype_list_item, R.id.measTypeTextView,
                     new String[] {"Light", "pH", "Dissolved Oxygen", "Ammonium", "Nitrate", "Temperature"});
             listView.setAdapter(listAdapter);
@@ -152,33 +182,27 @@ public class SystemDetailActivity extends AppCompatActivity {
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
 
         /**
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
+        public static PlaceholderFragment newInstance(String uid) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            args.putString("system_uid", uid);
             fragment.setArguments(args);
             return fragment;
         }
 
-        public PlaceholderFragment() {
-        }
+        public PlaceholderFragment() { }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_system_detail, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            textView.setText(getString(R.string.section_format, getArguments().getString("system_uid")));
             return rootView;
         }
     }

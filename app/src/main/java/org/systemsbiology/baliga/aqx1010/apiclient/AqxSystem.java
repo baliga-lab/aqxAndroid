@@ -1,4 +1,4 @@
-package org.systemsbiology.baliga.aqx1010;
+package org.systemsbiology.baliga.aqx1010.apiclient;
 
 public class AqxSystem {
     public String name;
@@ -7,4 +7,5 @@ public class AqxSystem {
         this.name = name;
         this.uid = uid;
     }
+    public String toString() { return name; }
 }

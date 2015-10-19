@@ -2,7 +2,6 @@ package org.systemsbiology.baliga.aqx1010;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import android.app.NotificationManager;
 import android.support.v4.app.NotificationCompat;

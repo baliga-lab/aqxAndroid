@@ -1,4 +1,4 @@
-package org.systemsbiology.baliga.aqx1010;
+package org.systemsbiology.baliga.aqx1010.apiclient;
 
 import java.util.List;
 
