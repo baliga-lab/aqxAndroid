@@ -29,6 +29,8 @@ import org.systemsbiology.baliga.aqx1010.apiclient.GetSystemDetailsTaskListener;
 import org.systemsbiology.baliga.aqx1010.apiclient.GoogleTokenTask;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.util.Date;
 
 public class SystemDetailActivity extends AppCompatActivity
 implements GetSystemDetailsTaskListener {
@@ -49,6 +51,7 @@ implements GetSystemDetailsTaskListener {
     private ViewPager mViewPager;
     private String systemUID;
     private String email;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +61,7 @@ implements GetSystemDetailsTaskListener {
 
         setContentView(R.layout.activity_system_detail);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -109,8 +112,30 @@ implements GetSystemDetailsTaskListener {
     public void detailsRetrieved(AqxSystemDetails details) {
         Log.d("aqx1010", String.format("System name: %s, created on: %s",
                 details.name, details.creationDate.toString()));
-    }
+        toolbar.setTitle(details.name);
 
+        // We can update the fragment contents by retrieving their
+        // elements using their id
+        TextView startDateView = (TextView) this.findViewById(R.id.startDateView);
+        if (details.startDate != null) {
+            DateFormat dateFormat = DateFormat.getDateInstance();
+            startDateView.setText(dateFormat.format(details.startDate));
+        } else {
+            startDateView.setText("-");
+        }
+        TextView aqxTechniqueView = (TextView) this.findViewById(R.id.aqxTechniqueView);
+        aqxTechniqueView.setText(details.aqxTechnique);
+        if (details.aquaticOrganisms.length > 0) {
+            TextView aqorgView = (TextView) this.findViewById(R.id.aqorgView);
+            aqorgView.setText(String.format("%s (%d)", details.aquaticOrganisms[0].name,
+                    details.aquaticOrganisms[0].count));
+        }
+        if (details.crops.length > 0) {
+            TextView cropView = (TextView) this.findViewById(R.id.cropView);
+            cropView.setText(String.format("%s (%d)", details.crops[0].name,
+                    details.crops[0].count));
+        }
+    }
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -125,11 +150,11 @@ implements GetSystemDetailsTaskListener {
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
+            // Return a OverviewFragment (defined as a static inner class below).
             if (position == 1) {
                 return new MeasurementTypesFragment();
             }
-            return PlaceholderFragment.newInstance(systemUID);
+            return new OverviewFragment();
         }
 
         @Override
@@ -181,28 +206,14 @@ implements GetSystemDetailsTaskListener {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(String uid) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putString("system_uid", uid);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() { }
+    public static class OverviewFragment extends Fragment {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_system_detail, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getString("system_uid")));
+            TextView creationDateView = (TextView) rootView.findViewById(R.id.startDateView);
+            if (creationDateView != null) creationDateView.setText(R.string.title_activity_main);
             return rootView;
         }
     }

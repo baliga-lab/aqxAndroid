@@ -4,11 +4,15 @@ import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class GetSystemDetailsTask extends GoogleTokenTask<Void, Integer, AqxSystemDetails> {
@@ -31,8 +35,41 @@ public class GetSystemDetailsTask extends GoogleTokenTask<Void, Integer, AqxSyst
             JSONObject json = fetchObjectForURL(url);
             if (json == null) return null; // return null -> JSON object was not retrieved
             JSONObject details = json.getJSONObject("system_details");
-            Date creationDate = new Date(); // TODO
-            return new AqxSystemDetails(details.getString("name"), creationDate);
+            Date creationTime = new Date(); // TODO
+            Date startDate = null;
+
+            try {
+                DateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                creationTime = datetimeFormat.parse(details.getString("creation_time")); // TODO
+            } catch (ParseException ex) {
+                Log.e("aqx1010", "parse date error", ex);
+            }
+
+            if (details.getString("start_date").length() > 0) {
+                try {
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    startDate = dateFormat.parse(details.getString("start_date")); // TODO
+                } catch (ParseException ex) {
+                    Log.e("aqx1010", "parse date error", ex);
+                }
+            }
+            JSONArray organismsJSON = details.getJSONArray("aquatic_organisms");
+            JSONArray cropsJSON = details.getJSONArray("crops");
+            NameAndCount[] organisms = new NameAndCount[organismsJSON.length()];
+            NameAndCount[] crops = new NameAndCount[cropsJSON.length()];
+            for (int i = 0; i < organismsJSON.length(); i++) {
+                JSONObject obj = organismsJSON.getJSONObject(i);
+                String name = obj.names().getString(0);
+                organisms[i] = new NameAndCount(name, obj.getInt(name));
+            }
+            for (int i = 0; i < cropsJSON.length(); i++) {
+                JSONObject obj = cropsJSON.getJSONObject(i);
+                String name = obj.names().getString(0);
+                crops[i] = new NameAndCount(name, obj.getInt(name));
+            }
+
+            return new AqxSystemDetails(details.getString("name"), creationTime, startDate,
+                    details.getString("aqx_technique"), organisms, crops);
         } catch (JSONException ex) {
             Log.e("aqx1010", "can not parse json", ex);
         } catch (IOException ex) {
