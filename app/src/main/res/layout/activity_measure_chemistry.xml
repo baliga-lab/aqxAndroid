@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Submit"
-        android:id="@+id/button"
+        android:id="@+id/submitButton"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:inputType="date"
         android:ems="10"
-        android:id="@+id/measureDateText"
+        android:id="@+id/editDateView"
         android:text="10/11/2015"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
@@ -53,19 +53,19 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Date"
-        android:id="@+id/textView2"
-        android:layout_alignBottom="@+id/measureDateText"
+        android:id="@+id/dateLabel"
+        android:layout_alignBottom="@+id/editDateView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:labelFor="@id/measureDateText" />
+        android:labelFor="@id/editDateView" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Time"
-        android:id="@+id/textView4"
-        android:layout_below="@+id/measureDateText"
+        android:id="@+id/timeLabel"
+        android:layout_below="@+id/editDateView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="37dp" />
@@ -75,10 +75,10 @@
         android:layout_height="wrap_content"
         android:inputType="time"
         android:ems="10"
-        android:id="@+id/editText2"
-        android:layout_alignBottom="@+id/textView4"
-        android:layout_alignLeft="@+id/measureDateText"
-        android:layout_alignStart="@+id/measureDateText"
+        android:id="@+id/editTimeView"
+        android:layout_alignBottom="@+id/timeLabel"
+        android:layout_alignLeft="@+id/editDateView"
+        android:layout_alignStart="@+id/editDateView"
         android:text="11:00:35" />
 
 </RelativeLayout>

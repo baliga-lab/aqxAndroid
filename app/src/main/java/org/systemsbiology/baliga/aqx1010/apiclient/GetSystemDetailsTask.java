@@ -39,16 +39,14 @@ public class GetSystemDetailsTask extends GoogleTokenTask<Void, Integer, AqxSyst
             Date startDate = null;
 
             try {
-                DateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                creationTime = datetimeFormat.parse(details.getString("creation_time")); // TODO
+                creationTime = SystemDefaults.API_DATE_TIME_FORMAT.parse(details.getString("creation_time")); // TODO
             } catch (ParseException ex) {
                 Log.e("aqx1010", "parse date error", ex);
             }
 
             if (details.getString("start_date").length() > 0) {
                 try {
-                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    startDate = dateFormat.parse(details.getString("start_date")); // TODO
+                    startDate = SystemDefaults.API_DATE_FORMAT.parse(details.getString("start_date")); // TODO
                 } catch (ParseException ex) {
                     Log.e("aqx1010", "parse date error", ex);
                 }

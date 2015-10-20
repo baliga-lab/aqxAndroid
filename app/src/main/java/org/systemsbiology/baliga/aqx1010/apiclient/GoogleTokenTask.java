@@ -23,6 +23,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import javax.net.ssl.HttpsURLConnection;
+
 /**
  * A background task that runs in the background and retrieves a token.
  * We can use this as a base class for all classes that
@@ -50,6 +52,7 @@ public abstract class GoogleTokenTask<ParamType, ProgressType, RetType>
     @Nullable
     protected JSONObject fetchObjectForURL(URL url) throws IOException, JSONException {
         HttpURLConnection conn = getConnection(url);
+        HttpsURLConnection sconn = null;
         BufferedReader in = null;
         if (conn == null) return null;
         try {

@@ -10,7 +10,7 @@
     <string name="title_measure_light">Measure Light</string>
     <string name="title_activity_main">Your Systems</string>
 
-    <string name="label_start_date">Start Date</string>
+    <string name="label_start_date">Date started</string>
     <string name="label_aqx_technique">Aquaponics Technique</string>
     <string name="label_aqorg">Aquatic Organism</string>
     <string name="label_crop">Crop</string>
