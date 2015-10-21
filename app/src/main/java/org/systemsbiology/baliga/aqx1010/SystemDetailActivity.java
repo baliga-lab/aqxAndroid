@@ -30,54 +30,47 @@ import org.systemsbiology.baliga.aqx1010.apiclient.GoogleTokenTask;
 
 import java.io.IOException;
 import java.text.DateFormat;
-import java.util.Date;
 
 public class SystemDetailActivity extends AppCompatActivity
 implements GetSystemDetailsTaskListener {
 
     /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
      * The {@link ViewPager} that will host the section contents.
      */
-    private ViewPager mViewPager;
-    private String systemUID;
-    private String email;
     private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = this.getIntent();
-        this.systemUID = intent.getStringExtra("system_uid");
+        String systemUID = getIntent().getStringExtra("system_uid");
 
         setContentView(R.layout.activity_system_detail);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        // The {@link android.support.v4.view.PagerAdapter} that will provide
+        // fragments for each of the sections. We use a
+        // {@link FragmentPagerAdapter} derivative, which will keep every
+        // loaded fragment in memory. If this becomes too memory intensive, it
+        // may be best to switch to a
+        // {@link android.support.v4.app.FragmentStatePagerAdapter}.
+        SectionsPagerAdapter sectionsPagerAdapter =
+                new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.container);
+        viewPager.setAdapter(sectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
+        tabLayout.setupWithViewPager(viewPager);
 
         try {
-            this.email = GoogleTokenTask.storedEmail(this);
+            String email = GoogleTokenTask.storedEmail(this);
             if (GoogleTokenTask.isDeviceOnline(this)) {
-                new GetSystemDetailsTask(this, email, this.systemUID, this).execute();
+                new GetSystemDetailsTask(this, email, systemUID, this).execute();
             } else {
                 Toast.makeText(this, R.string.not_online, Toast.LENGTH_LONG).show();
             }
@@ -183,29 +176,42 @@ implements GetSystemDetailsTaskListener {
             ListView listView = (ListView) rootView.findViewById(R.id.measurementTypeListView);
             ArrayAdapter<String> listAdapter = new ArrayAdapter<>(this.getContext(),
                     R.layout.meastype_list_item, R.id.measTypeTextView,
-                    new String[] {"Light", "pH", "Dissolved Oxygen", "Ammonium", "Nitrate", "Temperature"});
+                    new String[] {"Light", "Temperature", "Dissolved Oxygen", "pH", "Ammonium", "Nitrate"});
             listView.setAdapter(listAdapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Log.d("aqx1010", "clicked");
+                    Intent intent = null;
                     switch (position) {
-                        case 0:
-                            startActivity(new Intent(getContext(), MeasureLightActivity.class));
+                        case 0: // light
+                            intent = new Intent(getContext(), MeasureLightActivity.class);
+                            break;
+                        case 1: // temp TODO generic range
+                            break;
+                        case 2: // dio TODO generic range
+                            break;
+                        case 3: // ph TODO generic range
+                            intent = new Intent(getContext(), MeasureChemistryActivity.class);
+                            intent.putExtra("measure_type", "ph");
+                            break;
+                        case 4: // ammonium
+                            intent = new Intent(getContext(), MeasureChemistryActivity.class);
+                            intent.putExtra("measure_type", "nh4");
+                            break;
+                        case 5: // nitrate
+                            intent = new Intent(getContext(), MeasureChemistryActivity.class);
+                            intent.putExtra("measure_type", "no3");
                             break;
                         default:
-                            startActivity(new Intent(getContext(), MeasureChemistryActivity.class));
                             break;
                     }
+                    startActivity(intent);
                 }
             });
             return rootView;
         }
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
     public static class OverviewFragment extends Fragment {
 
         @Override

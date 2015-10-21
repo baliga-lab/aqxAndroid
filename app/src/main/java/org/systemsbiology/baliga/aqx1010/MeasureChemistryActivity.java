@@ -15,25 +15,49 @@ import android.widget.TimePicker;
 import org.systemsbiology.baliga.aqx1010.apiclient.SystemDefaults;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MeasureChemistryActivity extends AppCompatActivity {
 
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog timePickerDialog;
+    private static Map<String, String> TYPE_TO_NAME = new HashMap<>();
+    private static Map<String, MeasureRange> TYPE_TO_RANGE = new HashMap<>();
+    private static Map<String, Integer> TYPE_TO_GRADIENT = new HashMap<>();
+    static {
+        TYPE_TO_NAME.put("ph", "pH");
+        TYPE_TO_NAME.put("nh4", "Ammonium");
+        TYPE_TO_NAME.put("no3", "Nitrate");
+
+        TYPE_TO_RANGE.put("ph", new MeasureRange(6.2f, 8.4f));
+        TYPE_TO_RANGE.put("nh4", new MeasureRange(0.0f, 6.0f));
+        TYPE_TO_RANGE.put("no3", new MeasureRange(0.0f, 200.0f));
+
+        TYPE_TO_GRADIENT.put("ph", R.drawable.ph_gradient);
+        TYPE_TO_GRADIENT.put("nh4", R.drawable.nh4_gradient);
+        TYPE_TO_GRADIENT.put("no3", R.drawable.no3_gradient);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String measureType = getIntent().getStringExtra("measure_type");
         setContentView(R.layout.activity_measure_chemistry);
-        this.getSupportActionBar().setTitle("Measure pH");
+        getSupportActionBar().setTitle(String.format("Measure %s", TYPE_TO_NAME.get(measureType)));
+        final MeasureRange range = TYPE_TO_RANGE.get(measureType);
+
         SeekBar seekbar = (SeekBar) findViewById(R.id.measureSeekBar);
         final EditText dateEdit = (EditText) findViewById(R.id.editDateView);
         final EditText timeEdit = (EditText) findViewById(R.id.editTimeView);
         final Calendar calendar = GregorianCalendar.getInstance();
         final EditText measureText = (EditText) findViewById(R.id.measureValueText);
+        measureText.setText(String.format("%.02f", range.min));
+        seekbar.setBackgroundResource(TYPE_TO_GRADIENT.get(measureType));
+
         Button submitButton = (Button) findViewById(R.id.submitButton);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,6 +72,7 @@ public class MeasureChemistryActivity extends AppCompatActivity {
                     Log.e("aqx1010","date parse error", ex);
                 }
                 if (submitDate != null) Log.d("aqx1010", "submission date " + submitDate.toString() + " value: " + value);
+                MeasureChemistryActivity.this.finish();
             }
         });
 
@@ -85,19 +110,16 @@ public class MeasureChemistryActivity extends AppCompatActivity {
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                float value = (float) progress;
+                float rangeAbs = range.max - range.min;
+                float value = range.min + ((float) progress * (rangeAbs / 100.0f));
                 measureText.setText(String.format("%.02f", value));
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) { }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStopTrackingTouch(SeekBar seekBar) { }
         });
     }
 }
