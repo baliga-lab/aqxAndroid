@@ -99,12 +99,10 @@ public class MeasureGenericActivity extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Date submitDate = null;
-                float value = 0.0f;
                 try {
-                    submitDate = SystemDefaults.UI_DATE_FORMAT.parse(dateEdit.getText().toString());
+                    Date submitDate = SystemDefaults.UI_DATE_FORMAT.parse(dateEdit.getText().toString());
                     String valueStr = measureText.getText().toString();
-                    value = Float.parseFloat(valueStr);
+                    float value = Float.parseFloat(valueStr);
                     JSONObject json = SystemDefaults.makeMeasurement(submitDate, measureType, value);
                     new SendMeasurementTask(MeasureGenericActivity.this,
                             GoogleTokenTask.storedEmail(MeasureGenericActivity.this),
@@ -116,8 +114,6 @@ public class MeasureGenericActivity extends AppCompatActivity {
                 } catch (IOException ex) {
                     Log.e("aqx1010","io error", ex);
                 }
-                if (submitDate != null) Log.d("aqx1010", "submission date " + submitDate.toString() + " value: " + value);
-
                 MeasureGenericActivity.this.finish();
             }
         });

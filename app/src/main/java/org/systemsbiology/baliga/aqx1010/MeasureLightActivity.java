@@ -16,9 +16,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.systemsbiology.baliga.aqx1010.apiclient.GoogleTokenTask;
+import org.systemsbiology.baliga.aqx1010.apiclient.SendMeasurementTask;
 import org.systemsbiology.baliga.aqx1010.apiclient.SystemDefaults;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -91,6 +98,20 @@ implements SensorEventListener {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    Date date = SystemDefaults.UI_DATE_FORMAT.parse(dateEdit.getText().toString());
+                    JSONObject json = SystemDefaults.makeMeasurement(date, measureType, currentValue);
+                    new SendMeasurementTask(MeasureLightActivity.this,
+                            GoogleTokenTask.storedEmail(MeasureLightActivity.this),
+                            systemUID, json).execute();
+
+                } catch (IOException ex) {
+                    Log.e("aqx1010","io error", ex);
+                } catch (ParseException ex) {
+                    Log.e("aqx1010","date parse error", ex);
+                } catch (JSONException ex) {
+                    Log.e("aqx1010","json error", ex);
+                }
                 MeasureLightActivity.this.finish();
             }
         });
