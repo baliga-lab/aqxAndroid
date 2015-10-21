@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import org.json.JSONArray;
@@ -34,18 +35,24 @@ public class MeasureChemistryActivity extends AppCompatActivity {
     private static Map<String, String> TYPE_TO_NAME = new HashMap<>();
     private static Map<String, MeasureRange> TYPE_TO_RANGE = new HashMap<>();
     private static Map<String, Integer> TYPE_TO_GRADIENT = new HashMap<>();
+    private static Map<String, String> TYPE_TO_UNIT = new HashMap<>();
+
     static {
-        TYPE_TO_NAME.put("ph", "pH");
-        TYPE_TO_NAME.put("nh4", "Ammonium");
-        TYPE_TO_NAME.put("no3", "Nitrate");
+        TYPE_TO_NAME.put(SystemDefaults.API_MEASURE_TYPE_PH, "pH");
+        TYPE_TO_NAME.put(SystemDefaults.API_MEASURE_TYPE_AMMONIUM, "Ammonium");
+        TYPE_TO_NAME.put(SystemDefaults.API_MEASURE_TYPE_NITRATE, "Nitrate");
 
-        TYPE_TO_RANGE.put("ph", new MeasureRange(6.2f, 8.4f));
-        TYPE_TO_RANGE.put("nh4", new MeasureRange(0.0f, 6.0f));
-        TYPE_TO_RANGE.put("no3", new MeasureRange(0.0f, 200.0f));
+        TYPE_TO_RANGE.put(SystemDefaults.API_MEASURE_TYPE_PH, new MeasureRange(6.2f, 8.4f));
+        TYPE_TO_RANGE.put(SystemDefaults.API_MEASURE_TYPE_AMMONIUM, new MeasureRange(0.0f, 6.0f));
+        TYPE_TO_RANGE.put(SystemDefaults.API_MEASURE_TYPE_NITRATE, new MeasureRange(0.0f, 200.0f));
 
-        TYPE_TO_GRADIENT.put("ph", R.drawable.ph_gradient);
-        TYPE_TO_GRADIENT.put("nh4", R.drawable.nh4_gradient);
-        TYPE_TO_GRADIENT.put("no3", R.drawable.no3_gradient);
+        TYPE_TO_GRADIENT.put(SystemDefaults.API_MEASURE_TYPE_PH, R.drawable.ph_gradient);
+        TYPE_TO_GRADIENT.put(SystemDefaults.API_MEASURE_TYPE_AMMONIUM, R.drawable.nh4_gradient);
+        TYPE_TO_GRADIENT.put(SystemDefaults.API_MEASURE_TYPE_NITRATE, R.drawable.no3_gradient);
+
+        TYPE_TO_UNIT.put(SystemDefaults.API_MEASURE_TYPE_PH, "");
+        TYPE_TO_UNIT.put(SystemDefaults.API_MEASURE_TYPE_AMMONIUM, "mg/l");
+        TYPE_TO_UNIT.put(SystemDefaults.API_MEASURE_TYPE_NITRATE, "mg/l");
     }
 
     @Override
@@ -64,8 +71,12 @@ public class MeasureChemistryActivity extends AppCompatActivity {
         final EditText timeEdit = (EditText) findViewById(R.id.editTimeView);
         final Calendar calendar = GregorianCalendar.getInstance();
         final EditText measureText = (EditText) findViewById(R.id.measureValueText);
+
+        dateEdit.setText(SystemDefaults.UI_DATE_FORMAT.format(calendar.getTime()));
         measureText.setText(String.format("%.02f", range.min));
         seekbar.setBackgroundResource(TYPE_TO_GRADIENT.get(measureType));
+        TextView unitLabel = (TextView) findViewById(R.id.unitLabel);
+        unitLabel.setText(TYPE_TO_UNIT.get(measureType));
 
         Button submitButton = (Button) findViewById(R.id.submitButton);
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -77,14 +88,7 @@ public class MeasureChemistryActivity extends AppCompatActivity {
                     submitDate = SystemDefaults.UI_DATE_FORMAT.parse(dateEdit.getText().toString());
                     String valueStr = measureText.getText().toString();
                     value = Float.parseFloat(valueStr);
-                    JSONObject json = new JSONObject();
-                    JSONObject measurement = new JSONObject();
-                    measurement.put("time", SystemDefaults.API_DATE_TIME_FORMAT.format(submitDate));
-                    measurement.put(measureType, value);
-                    JSONArray measurements = new JSONArray();
-                    measurements.put(measurement);
-                    json.put("measurements", measurements);
-                    Log.d("aqx1010", "JSON to submit: " + json);
+                    JSONObject json = SystemDefaults.makeMeasurement(submitDate, measureType, value);
                     new SendMeasurementTask(MeasureChemistryActivity.this,
                             GoogleTokenTask.storedEmail(MeasureChemistryActivity.this),
                             systemUID, json).execute();
@@ -120,7 +124,7 @@ public class MeasureChemistryActivity extends AppCompatActivity {
         timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                timeEdit.setText(String.format("%02d:%02d:00", hourOfDay, minute));
+                timeEdit.setText(String.format(SystemDefaults.UI_TIME_FORMAT, hourOfDay, minute));
             }
         }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true);
 

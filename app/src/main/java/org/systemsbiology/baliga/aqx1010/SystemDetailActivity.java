@@ -27,6 +27,7 @@ import org.systemsbiology.baliga.aqx1010.apiclient.AqxSystemDetails;
 import org.systemsbiology.baliga.aqx1010.apiclient.GetSystemDetailsTask;
 import org.systemsbiology.baliga.aqx1010.apiclient.GetSystemDetailsTaskListener;
 import org.systemsbiology.baliga.aqx1010.apiclient.GoogleTokenTask;
+import org.systemsbiology.baliga.aqx1010.apiclient.SystemDefaults;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -38,7 +39,7 @@ implements GetSystemDetailsTaskListener {
      * The {@link ViewPager} that will host the section contents.
      */
     private Toolbar toolbar;
-    private String systemUID, systemName;
+    private String systemUID, systemName = "?";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +107,7 @@ implements GetSystemDetailsTaskListener {
     public void detailsRetrieved(AqxSystemDetails details) {
         Log.d("aqx1010", String.format("System name: %s, created on: %s",
                 details.name, details.creationDate.toString()));
-        this.systemName = details.name;
+        this.systemName = details.name != null ? details.name : "?";
         toolbar.setTitle(details.name);
 
         // We can update the fragment contents by retrieving their
@@ -187,26 +188,27 @@ implements GetSystemDetailsTaskListener {
                     switch (position) {
                         case 0: // light
                             intent = new Intent(getContext(), MeasureLightActivity.class);
+                            intent.putExtra("measure_type", SystemDefaults.API_MEASURE_TYPE_LIGHT);
                             break;
                         case 1: // temp
                             intent = new Intent(getContext(), MeasureGenericActivity.class);
-                            intent.putExtra("measure_type", "temp");
+                            intent.putExtra("measure_type", SystemDefaults.API_MEASURE_TYPE_TEMP);
                             break;
                         case 2: // dio
                             intent = new Intent(getContext(), MeasureGenericActivity.class);
-                            intent.putExtra("measure_type", "dio");
+                            intent.putExtra("measure_type", SystemDefaults.API_MEASURE_TYPE_DIO);
                             break;
                         case 3: // ph
                             intent = new Intent(getContext(), MeasureChemistryActivity.class);
-                            intent.putExtra("measure_type", "ph");
+                            intent.putExtra("measure_type", SystemDefaults.API_MEASURE_TYPE_PH);
                             break;
                         case 4: // ammonium
                             intent = new Intent(getContext(), MeasureChemistryActivity.class);
-                            intent.putExtra("measure_type", "nh4");
+                            intent.putExtra("measure_type", SystemDefaults.API_MEASURE_TYPE_AMMONIUM);
                             break;
                         case 5: // nitrate
                             intent = new Intent(getContext(), MeasureChemistryActivity.class);
-                            intent.putExtra("measure_type", "no3");
+                            intent.putExtra("measure_type", SystemDefaults.API_MEASURE_TYPE_NITRATE);
                             break;
                         default:
                             break;
