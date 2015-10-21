@@ -12,10 +12,11 @@ public class SystemDefaults {
     public static final int REQUEST_CODE_PICK_ACCOUNT = 1000;
 
     public static final String SYSTEMS_LIST_URL = BASE_URL + "/api/v1.0/systems";
-    public static final String SYSTEM_DETAILS_URL = BASE_URL + "/api/v1.0/system-details/%s";
+    public static final String SYSTEM_INFO_URL = BASE_URL + "/api/v1.0/system/%s";
+    public static final String SYSTEM_MEASUREMENTS_URL = BASE_URL + "/api/v1.0/measurements/%s";
 
-    public static final DateFormat API_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-    public static final DateFormat API_DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static final DateFormat API_DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
+    public static final DateFormat API_DATE_TIME_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
     public static final DateFormat UI_DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
 }

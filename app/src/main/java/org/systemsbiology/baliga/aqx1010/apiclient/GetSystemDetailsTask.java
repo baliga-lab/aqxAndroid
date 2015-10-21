@@ -10,9 +10,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class GetSystemDetailsTask extends GoogleTokenTask<Void, Integer, AqxSystemDetails> {
@@ -31,7 +29,7 @@ public class GetSystemDetailsTask extends GoogleTokenTask<Void, Integer, AqxSyst
     @Nullable
     protected AqxSystemDetails doInBackground(Void... params) {
         try {
-            URL url = new URL(String.format(SystemDefaults.SYSTEM_DETAILS_URL, systemUID));
+            URL url = new URL(String.format(SystemDefaults.SYSTEM_INFO_URL, systemUID));
             JSONObject json = fetchObjectForURL(url);
             if (json == null) return null; // return null -> JSON object was not retrieved
             JSONObject details = json.getJSONObject("system_details");

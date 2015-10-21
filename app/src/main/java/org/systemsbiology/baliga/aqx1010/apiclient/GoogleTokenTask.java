@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -52,7 +53,6 @@ public abstract class GoogleTokenTask<ParamType, ProgressType, RetType>
     @Nullable
     protected JSONObject fetchObjectForURL(URL url) throws IOException, JSONException {
         HttpURLConnection conn = getConnection(url);
-        HttpsURLConnection sconn = null;
         BufferedReader in = null;
         if (conn == null) return null;
         try {
@@ -70,6 +70,33 @@ public abstract class GoogleTokenTask<ParamType, ProgressType, RetType>
         }
 
     }
+
+    protected JSONObject postJSONToURL(URL url, JSONObject obj) throws IOException, JSONException {
+        HttpURLConnection conn = getConnection(url);
+        if (conn != null) conn.setRequestMethod("POST");
+        BufferedReader in = null;
+        OutputStreamWriter out = null;
+        if (conn == null) return null;
+        try {
+            out = new OutputStreamWriter(conn.getOutputStream());
+            out.write(obj.toString());
+            out.flush();
+
+            in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            StringBuilder buffer = new StringBuilder();
+            String line;
+            while ((line = in.readLine()) != null) {
+                buffer.append(line);
+            }
+            return new JSONObject(buffer.toString());
+        } finally {
+            if (in != null) try { in.close(); } catch (IOException ex) {
+                Log.e("aqx1010", "can not close input stream", ex);
+            }
+        }
+
+    }
+
 
     /**
      * Gets an authentication token from Google and handles any
@@ -97,7 +124,7 @@ public abstract class GoogleTokenTask<ParamType, ProgressType, RetType>
         String token = fetchToken();
         if (token != null) {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             conn.setRequestProperty("Authorization", String.format("Bearer %s", token));
             return conn;
         }

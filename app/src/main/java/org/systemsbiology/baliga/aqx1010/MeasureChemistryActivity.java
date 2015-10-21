@@ -12,8 +12,14 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TimePicker;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.systemsbiology.baliga.aqx1010.apiclient.GoogleTokenTask;
+import org.systemsbiology.baliga.aqx1010.apiclient.SendMeasurementTask;
 import org.systemsbiology.baliga.aqx1010.apiclient.SystemDefaults;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
@@ -45,7 +51,9 @@ public class MeasureChemistryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String measureType = getIntent().getStringExtra("measure_type");
+        final String measureType = getIntent().getStringExtra("measure_type");
+        final String systemUID = getIntent().getStringExtra("system_uid");
+        final String systemName = getIntent().getStringExtra("system_name");
         setContentView(R.layout.activity_measure_chemistry);
         getSupportActionBar().setTitle(String.format("Measure %s", TYPE_TO_NAME.get(measureType)));
         final MeasureRange range = TYPE_TO_RANGE.get(measureType);
@@ -68,8 +76,23 @@ public class MeasureChemistryActivity extends AppCompatActivity {
                     submitDate = SystemDefaults.UI_DATE_FORMAT.parse(dateEdit.getText().toString());
                     String valueStr = measureText.getText().toString();
                     value = Float.parseFloat(valueStr);
+                    JSONObject json = new JSONObject();
+                    JSONObject measurement = new JSONObject();
+                    measurement.put("time", SystemDefaults.API_DATE_TIME_FORMAT.format(submitDate));
+                    measurement.put(measureType, value);
+                    JSONArray measurements = new JSONArray();
+                    measurements.put(measurement);
+                    json.put("measurements", measurements);
+                    Log.d("aqx1010", "JSON to submit: " + json);
+                    new SendMeasurementTask(MeasureChemistryActivity.this,
+                            GoogleTokenTask.storedEmail(MeasureChemistryActivity.this),
+                            systemUID, json).execute();
                 } catch (ParseException ex) {
                     Log.e("aqx1010","date parse error", ex);
+                } catch (JSONException ex) {
+                    Log.e("aqx1010","json error", ex);
+                } catch (IOException ex) {
+                    Log.e("aqx1010","io error", ex);
                 }
                 if (submitDate != null) Log.d("aqx1010", "submission date " + submitDate.toString() + " value: " + value);
                 MeasureChemistryActivity.this.finish();
@@ -116,10 +139,12 @@ public class MeasureChemistryActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) { }
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) { }
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
         });
     }
 }

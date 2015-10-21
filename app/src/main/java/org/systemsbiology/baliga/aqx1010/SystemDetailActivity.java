@@ -38,11 +38,12 @@ implements GetSystemDetailsTaskListener {
      * The {@link ViewPager} that will host the section contents.
      */
     private Toolbar toolbar;
+    private String systemUID, systemName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String systemUID = getIntent().getStringExtra("system_uid");
+        systemUID = getIntent().getStringExtra("system_uid");
 
         setContentView(R.layout.activity_system_detail);
 
@@ -105,6 +106,7 @@ implements GetSystemDetailsTaskListener {
     public void detailsRetrieved(AqxSystemDetails details) {
         Log.d("aqx1010", String.format("System name: %s, created on: %s",
                 details.name, details.creationDate.toString()));
+        this.systemName = details.name;
         toolbar.setTitle(details.name);
 
         // We can update the fragment contents by retrieving their
@@ -134,7 +136,7 @@ implements GetSystemDetailsTaskListener {
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -205,6 +207,9 @@ implements GetSystemDetailsTaskListener {
                         default:
                             break;
                     }
+                    SystemDetailActivity activity = (SystemDetailActivity) MeasurementTypesFragment.this.getActivity();
+                    intent.putExtra("system_uid", activity.systemUID);
+                    intent.putExtra("system_name", activity.systemName);
                     startActivity(intent);
                 }
             });
