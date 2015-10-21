@@ -2,6 +2,7 @@ package org.systemsbiology.baliga.aqx1010.apiclient;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class SystemDefaults {
     //public static final String BASE_URL = "https://aquaponics.systemsbiology.net";
@@ -15,8 +16,8 @@ public class SystemDefaults {
     public static final String SYSTEM_INFO_URL = BASE_URL + "/api/v1.0/system/%s";
     public static final String SYSTEM_MEASUREMENTS_URL = BASE_URL + "/api/v1.0/measurements/%s";
 
-    public static final DateFormat API_DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
-    public static final DateFormat API_DATE_TIME_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    public static final DateFormat API_DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
+    public static final DateFormat API_DATE_TIME_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US);
 
-    public static final DateFormat UI_DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
+    public static final DateFormat UI_DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
 }

@@ -188,11 +188,15 @@ implements GetSystemDetailsTaskListener {
                         case 0: // light
                             intent = new Intent(getContext(), MeasureLightActivity.class);
                             break;
-                        case 1: // temp TODO generic range
+                        case 1: // temp
+                            intent = new Intent(getContext(), MeasureGenericActivity.class);
+                            intent.putExtra("measure_type", "temp");
                             break;
-                        case 2: // dio TODO generic range
+                        case 2: // dio
+                            intent = new Intent(getContext(), MeasureGenericActivity.class);
+                            intent.putExtra("measure_type", "dio");
                             break;
-                        case 3: // ph TODO generic range
+                        case 3: // ph
                             intent = new Intent(getContext(), MeasureChemistryActivity.class);
                             intent.putExtra("measure_type", "ph");
                             break;

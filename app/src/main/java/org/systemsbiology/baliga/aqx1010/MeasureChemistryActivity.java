@@ -55,7 +55,8 @@ public class MeasureChemistryActivity extends AppCompatActivity {
         final String systemUID = getIntent().getStringExtra("system_uid");
         final String systemName = getIntent().getStringExtra("system_name");
         setContentView(R.layout.activity_measure_chemistry);
-        getSupportActionBar().setTitle(String.format("Measure %s", TYPE_TO_NAME.get(measureType)));
+        getSupportActionBar().setTitle(String.format("Measure %s (%s)",
+                TYPE_TO_NAME.get(measureType), systemName));
         final MeasureRange range = TYPE_TO_RANGE.get(measureType);
 
         SeekBar seekbar = (SeekBar) findViewById(R.id.measureSeekBar);
@@ -139,12 +140,10 @@ public class MeasureChemistryActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) { }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
+            public void onStopTrackingTouch(SeekBar seekBar) { }
         });
     }
 }
