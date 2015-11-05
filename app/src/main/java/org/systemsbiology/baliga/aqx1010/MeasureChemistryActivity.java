@@ -41,18 +41,22 @@ public class MeasureChemistryActivity extends AppCompatActivity {
         TYPE_TO_NAME.put(SystemDefaults.API_MEASURE_TYPE_PH, "pH");
         TYPE_TO_NAME.put(SystemDefaults.API_MEASURE_TYPE_AMMONIUM, "Ammonium");
         TYPE_TO_NAME.put(SystemDefaults.API_MEASURE_TYPE_NITRATE, "Nitrate");
+        TYPE_TO_NAME.put(SystemDefaults.API_MEASURE_TYPE_NITRATE, "Nitrite");
 
         TYPE_TO_RANGE.put(SystemDefaults.API_MEASURE_TYPE_PH, new MeasureRange(6.2f, 8.4f));
         TYPE_TO_RANGE.put(SystemDefaults.API_MEASURE_TYPE_AMMONIUM, new MeasureRange(0.0f, 6.0f));
         TYPE_TO_RANGE.put(SystemDefaults.API_MEASURE_TYPE_NITRATE, new MeasureRange(0.0f, 200.0f));
+        TYPE_TO_RANGE.put(SystemDefaults.API_MEASURE_TYPE_NITRITE, new MeasureRange(0.0f, 200.0f));
 
         TYPE_TO_GRADIENT.put(SystemDefaults.API_MEASURE_TYPE_PH, R.drawable.ph_gradient);
         TYPE_TO_GRADIENT.put(SystemDefaults.API_MEASURE_TYPE_AMMONIUM, R.drawable.nh4_gradient);
         TYPE_TO_GRADIENT.put(SystemDefaults.API_MEASURE_TYPE_NITRATE, R.drawable.no3_gradient);
+        TYPE_TO_GRADIENT.put(SystemDefaults.API_MEASURE_TYPE_NITRITE, R.drawable.no2_gradient);
 
         TYPE_TO_UNIT.put(SystemDefaults.API_MEASURE_TYPE_PH, "");
         TYPE_TO_UNIT.put(SystemDefaults.API_MEASURE_TYPE_AMMONIUM, "mg/l");
         TYPE_TO_UNIT.put(SystemDefaults.API_MEASURE_TYPE_NITRATE, "mg/l");
+        TYPE_TO_UNIT.put(SystemDefaults.API_MEASURE_TYPE_NITRITE, "mg/l");
     }
 
     @Override

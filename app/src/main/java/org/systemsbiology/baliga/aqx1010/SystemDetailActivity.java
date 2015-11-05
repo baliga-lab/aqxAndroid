@@ -179,7 +179,7 @@ implements GetSystemDetailsTaskListener {
             ListView listView = (ListView) rootView.findViewById(R.id.measurementTypeListView);
             ArrayAdapter<String> listAdapter = new ArrayAdapter<>(this.getContext(),
                     R.layout.meastype_list_item, R.id.measTypeTextView,
-                    new String[] {"Light", "Temperature", "Dissolved Oxygen", "pH", "Ammonium", "Nitrate"});
+                    new String[] {"Light", "Temperature", "Dissolved Oxygen", "pH", "Ammonium", "Nitrate", "Nitrite"});
             listView.setAdapter(listAdapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -209,6 +209,10 @@ implements GetSystemDetailsTaskListener {
                         case 5: // nitrate
                             intent = new Intent(getContext(), MeasureChemistryActivity.class);
                             intent.putExtra("measure_type", SystemDefaults.API_MEASURE_TYPE_NITRATE);
+                            break;
+                        case 6: // nitrite
+                            intent = new Intent(getContext(), MeasureChemistryActivity.class);
+                            intent.putExtra("measure_type", SystemDefaults.API_MEASURE_TYPE_NITRITE);
                             break;
                         default:
                             break;

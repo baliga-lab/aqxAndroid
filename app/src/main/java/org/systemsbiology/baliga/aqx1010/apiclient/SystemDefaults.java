@@ -17,6 +17,7 @@ public class SystemDefaults {
     public static final String API_MEASURE_TYPE_PH = "ph";
     public static final String API_MEASURE_TYPE_AMMONIUM = "ammonium";
     public static final String API_MEASURE_TYPE_NITRATE = "nitrate";
+    public static final String API_MEASURE_TYPE_NITRITE = "nitrite";
 
     //public static final String BASE_URL = "https://aquaponics.systemsbiology.net";
     public static final String BASE_URL = "http://eric.systemsbiology.net:5000";
@@ -29,8 +30,8 @@ public class SystemDefaults {
     public static final String SYSTEM_INFO_URL = BASE_URL + "/api/v1.0/system/%s";
     public static final String SYSTEM_MEASUREMENTS_URL = BASE_URL + "/api/v1.0/measurements/%s";
 
-    public static final DateFormat API_DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
-    public static final DateFormat API_DATE_TIME_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US);
+    public static final DateFormat API_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+    public static final DateFormat API_DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
 
     public static final DateFormat UI_DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
     public static final String UI_TIME_FORMAT = "%02d:%02d";
