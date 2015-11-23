@@ -31,7 +31,8 @@ public class SystemDefaults {
     public static final String SYSTEM_MEASUREMENTS_URL = BASE_URL + "/api/v1.0/measurements/%s";
 
     public static final DateFormat API_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-    public static final DateFormat API_DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
+    // Current API date format
+    public static final DateFormat API_DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
 
     public static final DateFormat UI_DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
     public static final String UI_TIME_FORMAT = "%02d:%02d";
