@@ -164,10 +164,9 @@ public class MainActivity extends AppCompatActivity
 
     public void systemListRetrieved(List<AqxSystem> systems) {
         ListView listView = (ListView) findViewById(R.id.systemListView);
-        AqxSystem[] systemArray = systems.toArray(new AqxSystem[systems.size()]);
 
-        ArrayAdapter<AqxSystem> listAdapter = new ArrayAdapter<>(this, R.layout.system_list_item,
-                R.id.systemNameTextView, systemArray);
+        AqxSystemListAdapter listAdapter = new AqxSystemListAdapter(this,
+                R.layout.system_list_item, R.id.systemNameTextView, systems);
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

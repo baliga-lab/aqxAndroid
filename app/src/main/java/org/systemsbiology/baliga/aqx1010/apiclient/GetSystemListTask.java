@@ -1,6 +1,8 @@
 package org.systemsbiology.baliga.aqx1010.apiclient;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -8,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +39,17 @@ public class GetSystemListTask extends GoogleTokenTask<Void, Integer, List<AqxSy
                 JSONObject s = arr.getJSONObject(i);
                 String sysname = s.getString("name");
                 String sysuid = s.getString("uid");
-                Log.d("aqx1010", String.format("System name: %s uid: %s", sysname, sysuid));
-                result.add(new AqxSystem(sysname, sysuid));
+                String thumbURL = s.getString("thumb_url");
+                try {
+                    URL fullThumbURL = SystemDefaults.makeImageURL(thumbURL);
+                    Log.d("aqx1010", "image URL: " + fullThumbURL.toString());
+                    Bitmap thumbnail = BitmapFactory.decodeStream(fullThumbURL.openConnection().getInputStream());
+                    result.add(new AqxSystem(sysname, sysuid, thumbnail));
+                } catch (MalformedURLException ex) {
+                    Log.e("aqx1010", "URL error", ex);
+                } catch (IOException ex) {
+                    Log.e("aqx1010", "IO error", ex);
+                }
             }
         } catch (JSONException ex) {
             Log.e("aqx1010", "can not parse json", ex);

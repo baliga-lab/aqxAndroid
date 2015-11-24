@@ -4,6 +4,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,7 +22,8 @@ public class SystemDefaults {
     public static final String API_MEASURE_TYPE_NITRITE = "nitrite";
 
     //public static final String BASE_URL = "https://aquaponics.systemsbiology.net";
-    public static final String BASE_URL = "http://eric.systemsbiology.net:5000";
+    //public static final String BASE_URL = "http://eric.systemsbiology.net:5000";
+    public static final String BASE_URL = "http://192.168.1.4:5000";
 
     //public static final String CLIENT_ID = "75692667349-b1pb7e4fh5slptq3allb93dvbtbfpjda.apps.googleusercontent.com";
     public static final String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
@@ -56,5 +59,10 @@ public class SystemDefaults {
         measurements.put(measurement);
         json.put("measurements", measurements);
         return json;
+    }
+
+    public static URL makeImageURL(String relPath) throws MalformedURLException {
+
+        return new URL(BASE_URL + relPath);
     }
 }
