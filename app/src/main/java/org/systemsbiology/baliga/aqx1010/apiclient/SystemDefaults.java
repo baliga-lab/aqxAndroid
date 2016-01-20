@@ -22,8 +22,8 @@ public class SystemDefaults {
     public static final String API_MEASURE_TYPE_NITRITE = "nitrite";
 
     //public static final String BASE_URL = "https://aquaponics.systemsbiology.net";
-    //public static final String BASE_URL = "http://eric.systemsbiology.net:5000";
-    public static final String BASE_URL = "http://192.168.1.4:5000";
+    public static final String BASE_URL = "http://eric.systemsbiology.net:5000";
+    //public static final String BASE_URL = "http://192.168.1.4:5000";
 
     //public static final String CLIENT_ID = "75692667349-b1pb7e4fh5slptq3allb93dvbtbfpjda.apps.googleusercontent.com";
     public static final String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
